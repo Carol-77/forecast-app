@@ -51,6 +51,12 @@ function refreshWeather(response) {
   
     searchCity(searchInput.value);
   }
+  function formatDay(timestamp){
+    let date = new Date(timestamp * 1000);
+    let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    return days[date.getDay()];
+  }
   
   function getForecast(city){
     let apiKey ="7342109a0ab45abta11f9354eb1e1ofa";
@@ -62,21 +68,23 @@ function refreshWeather(response) {
   function displayForecast(response){
     console.log(response.data);
 
-    let days =["Tue", "Wed", "Thu", "Fri", "Sat"];
     let forecastHtml ="";
 
-    days.forEach(function(day){
+    response.data.daily.forEach(function(day, index){
+        if (index < 5)
       forecastHtml =
       forecastHtml +
       `
       <div class="weather-forecast-day">
-      <div class="weather-forecast-date">${day}</div>
-      <div class="weather-forecast-icon">🌤️</div>
+      <div class="weather-forecast-date">${formatDay(day.time)}</div>
+      <div >
+      <img src="${day.condition.icon_url}"class="weather-forecast-icon"/>
+      </div>
       <div class="weather-forecast-temperatures">
         <div class="weather-forecast-temperature">
-          <strong>15º</strong>
+          <strong>${Math.round(day.temperature.maximum)}</strong>
         </div>
-        <div class="weather-(forecast-temperature">9º</div>
+        <div class="weather-(forecast-temperature">${Math.round(day.temperature.minimum)}</div>
       </div>
     </div>
     `;
